@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T奶增益计算器</title>
+<style>
+  /* ================= 主题变量 ================= */
+  :root {
+    /* 默认：白天模式 */
+    --bg-base: #f0f5f5;
+    --text-main: #2d3748;
+    --text-muted: #718096;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(0, 0, 0, 0.06);
+    --card-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.06);
+    --input-bg: #ffffff;
+    --input-border: rgba(0, 0, 0, 0.1);
+    
+    /* 主色调（用于按钮、输入框聚焦等基础交互） */
+    --accent: #0d9488; 
+    --accent-glow: rgba(13, 148, 136, 0.25);
+    --accent-soft: rgba(13, 148, 136, 0.12);
+    
+    /* 门派颜色 */
+    --c-qixiu: #f472b6;
+    --c-wanhua: #9b8afb;
+    --c-changge: #14b8a6;
+    --c-wudu: #c084fc;
+    --c-yaozong: #10b981;
+
+    /* 四T专属色 */
+    --c-tiance: #e74c3c; /* 天策红 */
+    --c-shaolin: #d97706; /* 少林琥珀金 (加深避免融于背景) */
+    --c-mingjiao: #e67e22; /* 明教橙 */
+    --c-cangyun: #8b4513; /* 苍云红棕 */
+  }
+
+  /* 夜晚模式 */
+  html[data-theme="dark"] {
+    --bg-base: #0b1016;
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
+    --card-bg: rgba(15, 23, 42, 0.7);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.5);
+    --input-bg: rgba(0, 0, 0, 0.4);
+    --input-border: rgba(255, 255, 255, 0.1);
+    
+    --accent: #4fd1c5;
+    --accent-glow: rgba(79, 209, 197, 0.4);
+    --accent-soft: rgba(79, 209, 197, 0.15);
+
+    /* 四T专属色 (夜晚亮化) */
+    --c-tiance: #ff5e5e;
+    --c-shaolin: #fbbf24; /* 明黄 */
+    --c-mingjiao: #ff9f43;
+    --c-cangyun: #cd853f;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    color:var(--text-main);
+    background-color: var(--bg-base);
+    /* 默认五奶流动背景 */
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(244, 114, 182, 0.35) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(155, 138, 251, 0.35) 0%, transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(192, 132, 252, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.25) 0%, transparent 60%);
+    background-size: 200% 200%;
+    animation: flowBg 20s ease infinite alternate;
+    background-attachment: fixed;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  /* 苍生T专属背景 */
+  body.tank-mode {
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(231, 76, 60, 0.35) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(217, 119, 6, 0.3) 0%, transparent 50%), /* 调整背景光晕为琥珀金 */
+      radial-gradient(circle at 10% 90%, rgba(230, 126, 34, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(139, 69, 19, 0.35) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(200, 80, 50, 0.25) 0%, transparent 60%);
+  }
+
+  html[data-theme="dark"] body {
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(244, 114, 182, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(155, 138, 251, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(192, 132, 252, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 50% 40%, rgba(20, 184, 166, 0.2) 0%, transparent 60%);
+  }
+
+  html[data-theme="dark"] body.tank-mode {
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(255, 94, 94, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 10% 90%, rgba(255, 159, 67, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 90% 90%, rgba(205, 133, 63, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 50% 40%, rgba(200, 80, 50, 0.15) 0%, transparent 60%);
+  }
+
+  @keyframes flowBg {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+  }
+
+  /* ================= 布局 ================= */
+  .app {
+    position: relative; z-index: 1;
+    max-width: 1180px; margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ---------- 头部控制区 ---------- */
+  .header-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px; gap: 16px; flex-wrap: wrap;
+  }
+  .app-head h1 {
+    font-size: 26px; margin: 0; letter-spacing: 0.05em;
+    background: linear-gradient(90deg, var(--text-main), var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .app-head p { margin: 8px 0 14px; color: var(--text-muted); font-size: 13px; letter-spacing: 0.02em;}
+
+  .controls {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+
+  /* ---------- 极简磨砂胶囊按钮 ---------- */
+  .capsule {
+    appearance: none; -webkit-appearance: none;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 99px; font-size: 13px; font-weight: 600;
+    cursor: pointer; outline: none;
+    backdrop-filter: blur(16px);
+    transition: all 0.2s ease;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+  .capsule:hover { border-color: var(--accent); color: var(--accent); }
+  .capsule.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px var(--accent-glow);
+  }
+
+  /* Emoji 图标样式 */
+  .theme-emoji {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  /* ---------- 门派排序与点缀 ---------- */
+  .sects {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 12px; letter-spacing: .2em; color: var(--text-muted);
+    margin: 0 0 16px;
+    transition: opacity 0.3s ease;
+  }
+  .sects span { display: inline-flex; align-items: center; gap: 6px; }
+  .sects i {
+    width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+    box-shadow: 0 0 10px currentColor;
+  }
+  
+  #sects-healer span:nth-child(1){ color: var(--c-qixiu); }
+  #sects-healer span:nth-child(2){ color: var(--c-wanhua); }
+  #sects-healer span:nth-child(3){ color: var(--c-changge); }
+  #sects-healer span:nth-child(4){ color: var(--c-wudu); }
+  #sects-healer span:nth-child(5){ color: var(--c-yaozong); }
+
+  #sects-tank span:nth-child(1){ color: var(--c-tiance); }
+  #sects-tank span:nth-child(2){ color: var(--c-shaolin); }
+  #sects-tank span:nth-child(3){ color: var(--c-mingjiao); }
+  #sects-tank span:nth-child(4){ color: var(--c-cangyun); }
+
+  .rainbow-bar { display: flex; gap: 4px; margin: 0 0 20px; height: 2px; }
+  .rainbow-bar i { flex: 1; border-radius: 99px; opacity: .8; box-shadow: 0 0 8px currentColor;}
+
+  /* ---------- 面板 ---------- */
+  .panel { display: none; animation: fade .3s ease; }
+  .panel.active { display: block; }
+  @keyframes fade { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:none;} }
+
+  .layout { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 18px; align-items: start; margin-bottom: 24px; }
+  @media (max-width:900px) { .layout { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 20px;
+    backdrop-filter: blur(20px) saturate(1.2);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    box-shadow: var(--card-shadow);
+    transition: background 0.4s ease, border-color 0.4s ease;
+  }
+  
+  .card h2 { font-size: 15px; margin: 0; letter-spacing: .04em; font-weight: 600;}
+  .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+  .hint { font-size: 12px; color: var(--text-muted); }
+
+  /* ---------- 表格（引入随机色变量） ---------- */
+  .table-wrap { overflow-x: auto; }
+  table.grid { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+  table.grid th {
+    text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .08em;
+    color: var(--text-muted); padding: 10px 12px; border-bottom: 1px solid var(--card-border);
+    white-space: nowrap;
+  }
+  table.grid td { padding: 8px 12px; border-bottom: 1px solid var(--card-border); }
+  table.grid tbody tr { transition: background .2s, border-color .2s; }
+  
+  table.grid tbody tr:hover { background: var(--accent-soft); }
+  
+  table.grid tbody tr.on {
+    background: var(--r-accent-soft, var(--accent-soft));
+    border-left: 3px solid var(--r-accent, var(--accent));
+  }
+  table.grid tbody tr.on td.name { 
+    color: var(--r-accent, var(--accent)); 
+    font-weight: 700; 
+  }
+  
+  table.grid td.name { font-weight: 500; }
+  table.grid td.desc { color: var(--text-muted); font-size: 13px; }
+  table.grid .num { text-align: right; }
+  table.grid .mid { text-align: center; }
+  table.grid tfoot td {
+    border-bottom: none; border-top: 1px solid var(--card-border);
+    padding-top: 14px; font-weight: 700;
+  }
+  .tfoot-label { color: var(--text-muted); font-weight: 600; font-size: 13px; }
+  
+  .total { color: var(--accent); font-size: 16px; font-variant-numeric: tabular-nums; }
+  .eff { font-variant-numeric: tabular-nums; color: var(--text-main); }
+
+  /* ---------- 输入框 ---------- */
+  input[type=number] {
+    font: inherit; font-size: 14px;
+    width: 100%; max-width: 110px;
+    padding: 7px 12px; text-align: right;
+    color: var(--text-main);
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 8px; outline: none; transition: .2s;
+    font-variant-numeric: tabular-nums;
+  }
+  input[type=number]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  /* ---------- 开关 ---------- */
+  .chk { position: relative; display: inline-block; width: 42px; height: 22px; cursor: pointer; vertical-align: middle; }
+  .chk input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .chk span { position: absolute; inset: 0; border-radius: 999px; background: var(--card-border); transition: .3s; }
+  .chk span::after {
+    content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%;
+    background: #cbd5e1; transition: .3s;
+  }
+  .chk input:checked + span { background: var(--accent-soft); }
+  .chk input:checked + span::after { left: 23px; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+
+  /* ---------- 右侧计算卡 ---------- */
+  .side h2 { margin-bottom: 18px; }
+  .field { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  .field label { font-size: 13px; color: var(--text-muted); }
+  .field input { max-width: 130px; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .stat {
+    display: flex; flex-direction: column; gap: 6px;
+    background: var(--input-bg); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px;
+  }
+  .stat-label { font-size: 12px; color: var(--text-muted); }
+  .stat-value { font-size: 28px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  
+  .stat.accent { border-color: var(--accent); background: var(--accent-soft); }
+  .stat.accent .stat-value { color: var(--accent); }
+  .note { font-size: 12px; line-height: 1.8; color: var(--text-muted); margin: 18px 0 0; }
+
+  /* ---------- 对应表高光 ---------- */
+  .corr-card { --corr-accent: var(--accent); --corr-accent-soft: var(--accent-soft); }
+  
+  .corr td.level { 
+    color: var(--corr-accent); 
+    background: var(--corr-accent-soft);
+    padding: 2px 8px; 
+    border-radius: 4px;
+    display: inline-block;
+    margin: 4px 0;
+    font-weight: 800; 
+    font-variant-numeric: tabular-nums; 
+    text-shadow: 0 0 8px var(--corr-accent-soft); 
+    transition: all 0.4s ease;
+  }
+  .corr th .col-name { font-size: 12px; color: var(--text-main); letter-spacing: 0; font-weight: 600; }
+  .corr th .col-sum { font-size: 11px; color: var(--text-muted); font-weight: 400; letter-spacing: 0; margin-top: 2px; }
+  .corr tbody td { font-variant-numeric: tabular-nums; }
+  .corr tbody td.need-cell input { max-width: 96px; }
+
+  @media (max-width: 820px) {
+    .app-head h1 { font-size: 20px; }
+    .header-top { flex-direction: column; align-items: stretch; }
+    .controls { justify-content: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header-top">
+    <div class="app-head">
+      <h1>T奶增益计算器</h1>
+      <p>勾选生效的增益，实时计算裸层数与增益后层数 · 数据源自「苍生铸世」赛季</p>
+    </div>
+    
+    <!-- 统一控制区 -->
+    <div class="controls">
+      <button id="btn-tab-healer" class="capsule active">苍生奶妈</button>
+      <button id="btn-tab-tank" class="capsule">苍生T</button>
+      <button id="theme-btn" class="capsule" title="切换白天/黑夜">
+        <span class="theme-emoji" id="theme-icon">☀️</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 奶妈门派显示区 -->
+  <div id="sects-healer">
+    <div class="sects">
+      <span><i></i>七秀 · 云裳</span>
+      <span><i></i>万花 · 离经</span>
+      <span><i></i>长歌 · 相知</span>
+      <span><i></i>五毒 · 补天</span>
+      <span><i></i>药宗 · 灵素</span>
+    </div>
+    <div class="rainbow-bar" aria-hidden="true">
+      <i style="background:var(--c-qixiu)"></i>
+      <i style="background:var(--c-wanhua)"></i>
+      <i style="background:var(--c-changge)"></i>
+      <i style="background:var(--c-wudu)"></i>
+      <i style="background:var(--c-yaozong)"></i>
+    </div>
+  </div>
+
+  <!-- 四T门派显示区 (默认隐藏) -->
+  <div id="sects-tank" style="display: none;">
+    <div class="sects">
+      <span><i></i>天策 · 铁牢律</span>
+      <span><i></i>少林 · 洗髓经</span>
+      <span><i></i>明教 · 明尊琉璃体</span>
+      <span><i></i>苍云 · 铁骨衣</span>
+    </div>
+    <div class="rainbow-bar" aria-hidden="true">
+      <i style="background:var(--c-tiance)"></i>
+      <i style="background:var(--c-shaolin)"></i>
+      <i style="background:var(--c-mingjiao)"></i>
+      <i style="background:var(--c-cangyun)"></i>
+    </div>
+  </div>
+
+  <main>
+    <!-- 苍生奶妈面板 -->
+    <section class="panel active" id="panel-healer">
+      <div class="layout">
+        <section class="card">
+          <div class="card-head">
+            <h2>根骨增益</h2>
+            <span class="hint">勾选后计入合计 · 数值可直接修改</span>
+          </div>
+          <div class="table-wrap">
+            <table class="grid">
+              <thead>
+                <tr>
+                  <th>增益</th><th>效果</th><th class="num">数值</th><th class="mid">启用</th><th class="num">生效值</th>
+                </tr>
+              </thead>
+              <tbody id="healer-tbody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" class="tfoot-label">合计增益</td>
+                  <td class="num total" id="healer-total">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
+
+        <aside class="card side">
+          <h2>层数计算</h2>
+          <div class="field">
+            <label>当前根骨</label>
+            <input type="number" id="healer-base">
+          </div>
+          <div class="field">
+            <label>每层所需</label>
+            <input type="number" id="healer-per">
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="stat-label">裸层数</span>
+              <span class="stat-value" id="healer-bare">—</span>
+            </div>
+            <div class="stat accent">
+              <span class="stat-label">增益后层数</span>
+              <span class="stat-value" id="healer-buffed">—</span>
+            </div>
+          </div>
+          <p class="note">
+            裸层数 = ⌊ 根骨 ÷ 每层所需 ⌋<br>
+            增益后层数 = ⌊ (根骨 + 合计增益) ÷ 每层所需 ⌋
+          </p>
+        </aside>
+      </div>
+
+      <section class="card corr-card" id="corr-card-healer">
+        <div class="card-head">
+          <h2>苍生铸世赛季奶妈根骨层数对应</h2>
+          <span class="hint">数值由上方「苍生奶妈」表实时计算</span>
+        </div>
+        <div class="table-wrap">
+          <table class="grid corr">
+            <thead id="healer-corr-thead"></thead>
+            <tbody id="healer-corr-tbody"></tbody>
+          </table>
+        </div>
+        <p class="note">
+          表中数值 = 需求根骨量 − 该方案已提供的根骨增益，即还需要额外补充的根骨量。
+        </p>
+      </section>
+    </section>
+
+    <!-- 苍生T面板 -->
+    <section class="panel" id="panel-tank">
+      <div class="layout">
+        <section class="card">
+          <div class="card-head">
+            <h2>体质增益</h2>
+            <span class="hint">勾选后计入合计 · 数值可直接修改</span>
+          </div>
+          <div class="table-wrap">
+            <table class="grid">
+              <thead>
+                <tr>
+                  <th>增益</th><th>效果</th><th class="num">数值</th><th class="mid">启用</th><th class="num">生效值</th>
+                </tr>
+              </thead>
+              <tbody id="tank-tbody"></tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4" class="tfoot-label">合计增益</td>
+                  <td class="num total" id="tank-total">0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </section>
+
+        <aside class="card side">
+          <h2>层数计算</h2>
+          <div class="field">
+            <label>当前体质</label>
+            <input type="number" id="tank-base">
+          </div>
+          <div class="field">
+            <label>每层所需</label>
+            <input type="number" id="tank-per">
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <span class="stat-label">裸层数</span>
+              <span class="stat-value" id="tank-bare">—</span>
+            </div>
+            <div class="stat accent">
+              <span class="stat-label">增益后层数</span>
+              <span class="stat-value" id="tank-buffed">—</span>
+            </div>
+          </div>
+          <p class="note">
+            裸层数 = ⌊ 体质 ÷ 每层所需 ⌋<br>
+            增益后层数 = ⌊ (体质 + 合计增益) ÷ 每层所需 ⌋
+          </p>
+        </aside>
+      </div>
+
+      <section class="card corr-card" id="corr-card-tank">
+        <div class="card-head">
+          <h2>苍生T体质层数对应</h2>
+          <span class="hint">数值由上方「苍生T」表实时计算</span>
+        </div>
+        <div class="table-wrap">
+          <table class="grid corr">
+            <thead id="tank-corr-thead"></thead>
+            <tbody id="tank-corr-tbody"></tbody>
+          </table>
+        </div>
+        <p class="note">
+          表中数值 = 需求体质量 − 该方案已提供的体质增益，即还需要额外补充的体质量。
+        </p>
+      </section>
+    </section>
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   数据模型
+   ========================================================= */
+const SHEETS = {
+  healer: {
+    base: 3304,
+    perLayer: 43,
+    items: [
+      { key:'pt',      name:'PT水特效', desc:'全属性',          value:'',  on:false },
+      { key:'yx',      name:'YX水特效', desc:'全属性',          value:50,  on:false },
+      { key:'xiuqi',   name:'秀气',     desc:'全属性',          value:45,  on:true  },
+      { key:'zhuozi',  name:'桌子',     desc:'巴渝珍馐宴',      value:143, on:true  },
+      { key:'lanshi',  name:'蓝食',     desc:'荏香豆腐羹',      value:63,  on:false },
+      { key:'xiaozi',  name:'小紫食',   desc:'云芝竹沥羹',      value:126, on:true  },
+      { key:'dazi',    name:'大紫食',   desc:'云芝竹沥羹·精',   value:158, on:false },
+      { key:'lanyao',  name:'蓝药',     desc:'五气培元丹',      value:81,  on:false },
+      { key:'xiaoyao', name:'小紫药',   desc:'五气归元丹',      value:162, on:true  },
+      { key:'dazhi',   name:'大紫药',   desc:'五气归元丹·精',   value:203, on:false },
+      { key:'lvjiu',   name:'绿酒',     desc:'高粱酒',          value:23,  on:false },
+      { key:'lvjiu2',  name:'绿酒',     desc:'高粱酒·今朝醉',   value:46,  on:false },
+      { key:'lanjiu',  name:'蓝酒',     desc:'高粱酒·六日醉',   value:69,  on:false },
+      { key:'zijiu',   name:'紫酒',     desc:'高粱酒·旬又三',   value:92,  on:true  }
+    ]
+  },
+  tank: {
+    base: 4540,
+    perLayer: 95,
+    items: [
+      { key:'xiuqi',  name:'秀气',     desc:'全属性',        value:45,  on:true  },
+      { key:'zhuozi', name:'桌子',     desc:'巴渝珍馐宴',    value:143, on:true  },
+      { key:'lanshi', name:'蓝食',     desc:'荏香豆腐羹',    value:63,  on:false },
+      { key:'zishi',  name:'紫食',     desc:'云芝竹沥羹',    value:126, on:true  },
+      { key:'jzishi', name:'精·紫食',  desc:'云芝竹沥羹·精', value:158, on:false },
+      { key:'lanyao', name:'蓝药',     desc:'五气培元丹',    value:81,  on:false },
+      { key:'zhiyao', name:'紫药',     desc:'五气归元丹',    value:162, on:true  },
+      { key:'jzhiyao',name:'精·紫药',  desc:'五气归元丹·精', value:203, on:false }
+    ]
+  }
+};
+
+const HEALER_CORR_ROWS = [
+  { need: 3440, level: 80  },
+  { need: 3655, level: 85  },
+  { need: 3870, level: 90  },
+  { need: 4085, level: 95  },
+  { need: 4300, level: 100 }
+];
+
+const TANK_CORR_ROWS = [
+  { need: 7600, level: 80  },
+  { need: 8075, level: 85  },
+  { need: 8550, level: 90  },
+  { need: 9025, level: 95  },
+  { need: 9500, level: 100 }
+];
+
+/* =========================================================
+   门派颜色池与工具函数
+   ========================================================= */
+const healerColors = ['#f472b6', '#14b8a6', '#9b8afb', '#c084fc', '#10b981']; 
+// T的颜色池，同步更新琥珀金
+const tankColors = ['#e74c3c', '#d97706', '#e67e22', '#8b4513']; 
+
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function getRandomColor(type) {
+  const pool = type === 'healer' ? healerColors : tankColors;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/* =========================================================
+   白天/夜晚模式切换 (Emoji)
+   ========================================================= */
+const themeBtn = document.getElementById('theme-btn');
+const themeIcon = document.getElementById('theme-icon');
+
+let currentTheme = 'light';
+try {
+  const saved = localStorage.getItem('t-healer-theme');
+  if (saved) currentTheme = saved;
+} catch (e) {}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  
+  if (currentTheme === 'light') {
+    themeIcon.textContent = '☀️';
+  } else {
+    themeIcon.textContent = '🌙';
+  }
+}
+
+applyTheme();
+
+themeBtn.addEventListener('click', () => {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  try { localStorage.setItem('t-healer-theme', currentTheme); } catch (e) {}
+  applyTheme();
+});
+
+/* =========================================================
+   模块并列按钮切换 (联动门派与背景)
+   ========================================================= */
+const btnHealer = document.getElementById('btn-tab-healer');
+const btnTank = document.getElementById('btn-tab-tank');
+const sectsHealer = document.getElementById('sects-healer');
+const sectsTank = document.getElementById('sects-tank');
+
+function switchModule(targetTab) {
+  if (targetTab === 'healer') {
+    btnHealer.classList.add('active');
+    btnTank.classList.remove('active');
+    document.getElementById('panel-healer').classList.add('active');
+    document.getElementById('panel-tank').classList.remove('active');
+    
+    sectsHealer.style.display = 'block';
+    sectsTank.style.display = 'none';
+    document.body.classList.remove('tank-mode');
+    
+    randomizeCorrColor('healer');
+  } else {
+    btnTank.classList.add('active');
+    btnHealer.classList.remove('active');
+    document.getElementById('panel-tank').classList.add('active');
+    document.getElementById('panel-healer').classList.remove('active');
+    
+    sectsHealer.style.display = 'none';
+    sectsTank.style.display = 'block';
+    document.body.classList.add('tank-mode');
+    
+    randomizeCorrColor('tank');
+  }
+}
+
+btnHealer.addEventListener('click', () => switchModule('healer'));
+btnTank.addEventListener('click', () => switchModule('tank'));
+
+/* =========================================================
+   对应表随机高光颜色逻辑
+   ========================================================= */
+function randomizeCorrColor(type) {
+  const color = getRandomColor(type);
+  const card = type === 'healer' ? document.getElementById('corr-card-healer') : document.getElementById('corr-card-tank');
+  card.style.setProperty('--corr-accent', color);
+  card.style.setProperty('--corr-accent-soft', hexToRgba(color, 0.15)); 
+}
+
+/* =========================================================
+   主表格随机高亮应用逻辑
+   ========================================================= */
+function applyRowHighlight(tr, type) {
+  const color = getRandomColor(type);
+  tr.style.setProperty('--r-accent', color);
+  tr.style.setProperty('--r-accent-soft', hexToRgba(color, 0.08));
+}
+
+/* =========================================================
+   渲染主表格函数
+   ========================================================= */
+function renderHealerTable() {
+  const s = SHEETS.healer;
+  const tbody = document.getElementById('healer-tbody');
+  
+  tbody.innerHTML = s.items.map((it, i) => `
+    <tr data-i="${i}" class="${it.on ? 'on' : ''}">
+      <td class="name">${it.name}</td>
+      <td class="desc">${it.desc}</td>
+      <td class="num">
+        <input type="number" class="val" data-i="${i}" value="${it.value}" placeholder="—">
+      </td>
+      <td class="mid">
+        <label class="chk">
+          <input type="checkbox" class="on" data-i="${i}" ${it.on ? 'checked' : ''}>
+          <span></span>
+        </label>
+      </td>
+      <td class="num eff"></td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('tr.on').forEach(tr => applyRowHighlight(tr, 'healer'));
+
+  document.getElementById('healer-base').value = s.base;
+  document.getElementById('healer-per').value = s.perLayer;
+
+  tbody.addEventListener('input', e => {
+    const t = e.target;
+    if (t.classList.contains('val')) {
+      const i = +t.dataset.i;
+      s.items[i].value = t.value === '' ? '' : Number(t.value);
+      updateSheet('healer');
+      updateHealerCorrespondence();
+    }
+  });
+
+  tbody.addEventListener('change', e => {
+    const t = e.target;
+    if (t.classList.contains('on')) {
+      const i = +t.dataset.i;
+      const tr = t.closest('tr');
+      s.items[i].on = t.checked;
+      
+      if (t.checked) {
+        applyRowHighlight(tr, 'healer');
+      } else {
+        tr.style.removeProperty('--r-accent');
+        tr.style.removeProperty('--r-accent-soft');
+      }
+      
+      updateSheet('healer');
+      updateHealerCorrespondence();
+    }
+  });
+
+  document.getElementById('healer-base').addEventListener('input', e => {
+    s.base = Number(e.target.value) || 0;
+    updateSheet('healer');
+  });
+  document.getElementById('healer-per').addEventListener('input', e => {
+    s.perLayer = Number(e.target.value) || 0;
+    updateSheet('healer');
+  });
+
+  updateSheet('healer');
+}
+
+function renderTankTable() {
+  const s = SHEETS.tank;
+  const tbody = document.getElementById('tank-tbody');
+  
+  tbody.innerHTML = s.items.map((it, i) => `
+    <tr data-i="${i}" class="${it.on ? 'on' : ''}">
+      <td class="name">${it.name}</td>
+      <td class="desc">${it.desc}</td>
+      <td class="num">
+        <input type="number" class="val" data-i="${i}" value="${it.value}" placeholder="—">
+      </td>
+      <td class="mid">
+        <label class="chk">
+          <input type="checkbox" class="on" data-i="${i}" ${it.on ? 'checked' : ''}>
+          <span></span>
+        </label>
+      </td>
+      <td class="num eff"></td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('tr.on').forEach(tr => applyRowHighlight(tr, 'tank'));
+
+  document.getElementById('tank-base').value = s.base;
+  document.getElementById('tank-per').value = s.perLayer;
+
+  tbody.addEventListener('input', e => {
+    const t = e.target;
+    if (t.classList.contains('val')) {
+      const i = +t.dataset.i;
+      s.items[i].value = t.value === '' ? '' : Number(t.value);
+      updateSheet('tank');
+      updateTankCorrespondence();
+    }
+  });
+
+  tbody.addEventListener('change', e => {
+    const t = e.target;
+    if (t.classList.contains('on')) {
+      const i = +t.dataset.i;
+      const tr = t.closest('tr');
+      s.items[i].on = t.checked;
+      
+      if (t.checked) {
+        applyRowHighlight(tr, 'tank');
+      } else {
+        tr.style.removeProperty('--r-accent');
+        tr.style.removeProperty('--r-accent-soft');
+      }
+      
+      updateSheet('tank');
+      updateTankCorrespondence();
+    }
+  });
+
+  document.getElementById('tank-base').addEventListener('input', e => {
+    s.base = Number(e.target.value) || 0;
+    updateSheet('tank');
+  });
+  document.getElementById('tank-per').addEventListener('input', e => {
+    s.perLayer = Number(e.target.value) || 0;
+    updateSheet('tank');
+  });
+
+  updateSheet('tank');
+}
+
+function updateSheet(key) {
+  const s = SHEETS[key];
+  let total = 0;
+  const tbody = document.getElementById(`${key}-tbody`);
+
+  tbody.querySelectorAll('tr').forEach(tr => {
+    const it = s.items[+tr.dataset.i];
+    tr.classList.toggle('on', it.on);
+    const eff = tr.querySelector('.eff');
+    const raw = it.value;
+    const v = Number(raw) || 0;
+    if (it.on) {
+      total += v;
+      eff.textContent = (raw === '' || raw === null) ? '' : v;
+    } else {
+      eff.textContent = '';
+    }
+  });
+
+  document.getElementById(`${key}-total`).textContent = total;
+
+  const per = s.perLayer;
+  const bare   = per > 0 ? Math.floor(s.base / per) : null;
+  const buffed = per > 0 ? Math.floor((s.base + total) / per) : null;
+
+  document.getElementById(`${key}-bare`).textContent   = per > 0 ? bare   : '—';
+  document.getElementById(`${key}-buffed`).textContent = per > 0 ? buffed : '—';
+}
+
+/* =========================================================
+   奶妈对应表逻辑
+   ========================================================= */
+function getHealerCols() {
+  const h = SHEETS.healer;
+  const val = k => {
+    const it = h.items.find(x => x.key === k);
+    return Number(it && it.value) || 0;
+  };
+  const XQ = val('xiuqi'), ZI = val('zhuozi'), XS = val('xiaozi'), XY = val('xiaoyao'), DS = val('dazi'), DY = val('dazhi'), JIU = val('zijiu');
+
+  return [
+    { name:'秀气',           sum: XQ },
+    { name:'秀气+桌子',      sum: XQ + ZI },
+    { name:'秀桌小紫药食',   sum: XQ + ZI + XS + XY },
+    { name:'秀桌小紫药食酒', sum: XQ + ZI + XS + XY + JIU },
+    { name:'秀桌大紫药食',   sum: XQ + ZI + DS + DY },
+    { name:'秀桌大紫药食酒', sum: XQ + ZI + DS + DY + JIU }
+  ];
+}
+
+function buildHealerCorrespondence() {
+  const cols = getHealerCols();
+  const thead = document.getElementById('healer-corr-thead');
+  thead.innerHTML = `
+    <tr>
+      <th>需求根骨量</th>
+      <th>对应层数</th>
+      ${cols.map(c => `
+        <th class="num">
+          <div class="col-name">${c.name}</div>
+          <div class="col-sum">根骨 ${c.sum}</div>
+        </th>`).join('')}
+    </tr>
+  `;
+
+  const tbody = document.getElementById('healer-corr-tbody');
+  tbody.innerHTML = HEALER_CORR_ROWS.map((r, ri) => `
+    <tr data-r="${ri}">
+      <td class="num need-cell">
+        <input type="number" class="need" data-r="${ri}" value="${r.need}">
+      </td>
+      <td class="level">${r.level}</td>
+      ${cols.map(c => `<td class="num calc">${r.need - c.sum}</td>`).join('')}
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.need').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const ri = +inp.dataset.r;
+      HEALER_CORR_ROWS[ri].need = Number(inp.value) || 0;
+      updateHealerCorrespondence();
+    });
+  });
+}
+
+function updateHealerCorrespondence() {
+  const cols = getHealerCols();
+  const ths = document.querySelectorAll('#healer-corr-thead th');
+  for (let i = 2; i < ths.length; i++) {
+    const div = ths[i].querySelector('.col-sum');
+    if (div) div.textContent = `根骨 ${cols[i-2].sum}`;
+  }
+
+  const tbody = document.getElementById('healer-corr-tbody');
+  tbody.querySelectorAll('tr').forEach((tr, ri) => {
+    const need = HEALER_CORR_ROWS[ri].need;
+    tr.querySelectorAll('td.calc').forEach((td, ci) => {
+      td.textContent = need - cols[ci].sum;
+    });
+  });
+}
+
+/* =========================================================
+   T对应表逻辑
+   ========================================================= */
+function getTankCols() {
+  const t = SHEETS.tank;
+  const val = k => {
+    const it = t.items.find(x => x.key === k);
+    return Number(it && it.value) || 0;
+  };
+  const XQ = val('xiuqi'), ZI = val('zhuozi'), ZS = val('zishi'), ZY = val('zhiyao'), JZS = val('jzishi'), JZY = val('jzhiyao');
+  
+  return [
+    { name:'秀气',           sum: XQ },
+    { name:'秀气+桌子',      sum: XQ + ZI },
+    { name:'秀桌紫药食',     sum: XQ + ZI + ZS + ZY },
+    { name:'秀桌精紫药食',   sum: XQ + ZI + JZS + JZY },
+    { name:'全部常规增益',   sum: XQ + ZI + ZS + ZY + JZS + JZY }
+  ];
+}
+
+function buildTankCorrespondence() {
+  const cols = getTankCols();
+  const thead = document.getElementById('tank-corr-thead');
+  thead.innerHTML = `
+    <tr>
+      <th>需求体质量</th>
+      <th>对应层数</th>
+      ${cols.map(c => `
+        <th class="num">
+          <div class="col-name">${c.name}</div>
+          <div class="col-sum">体质 ${c.sum}</div>
+        </th>`).join('')}
+    </tr>
+  `;
+
+  const tbody = document.getElementById('tank-corr-tbody');
+  tbody.innerHTML = TANK_CORR_ROWS.map((r, ri) => `
+    <tr data-r="${ri}">
+      <td class="num need-cell">
+        <input type="number" class="need" data-r="${ri}" value="${r.need}">
+      </td>
+      <td class="level">${r.level}</td>
+      ${cols.map(c => `<td class="num calc">${r.need - c.sum}</td>`).join('')}
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.need').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const ri = +inp.dataset.r;
+      TANK_CORR_ROWS[ri].need = Number(inp.value) || 0;
+      updateTankCorrespondence();
+    });
+  });
+}
+
+function updateTankCorrespondence() {
+  const cols = getTankCols();
+  const ths = document.querySelectorAll('#tank-corr-thead th');
+  for (let i = 2; i < ths.length; i++) {
+    const div = ths[i].querySelector('.col-sum');
+    if (div) div.textContent = `体质 ${cols[i-2].sum}`;
+  }
+
+  const tbody = document.getElementById('tank-corr-tbody');
+  tbody.querySelectorAll('tr').forEach((tr, ri) => {
+    const need = TANK_CORR_ROWS[ri].need;
+    tr.querySelectorAll('td.calc').forEach((td, ci) => {
+      td.textContent = need - cols[ci].sum;
+    });
+  });
+}
+
+/* =========================================================
+   初始化
+   ========================================================= */
+renderHealerTable();
+renderTankTable();
+
+buildHealerCorrespondence();
+buildTankCorrespondence();
+
+randomizeCorrColor('healer');
+randomizeCorrColor('tank');
+</script>
+</body>
+</html>
