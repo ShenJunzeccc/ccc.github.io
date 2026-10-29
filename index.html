@@ -17,7 +17,7 @@
     --input-bg: #ffffff;
     --input-border: rgba(0, 0, 0, 0.1);
     
-    /* 主色调（用于按钮、输入框聚焦等基础交互） */
+    /* 主色调 */
     --accent: #0d9488; 
     --accent-glow: rgba(13, 148, 136, 0.25);
     --accent-soft: rgba(13, 148, 136, 0.12);
@@ -30,10 +30,10 @@
     --c-yaozong: #10b981;
 
     /* 四T专属色 */
-    --c-tiance: #e74c3c; /* 天策红 */
-    --c-shaolin: #d97706; /* 少林琥珀金 (加深避免融于背景) */
-    --c-mingjiao: #e67e22; /* 明教橙 */
-    --c-cangyun: #8b4513; /* 苍云红棕 */
+    --c-tiance: #e74c3c;
+    --c-shaolin: #d97706;
+    --c-mingjiao: #e67e22;
+    --c-cangyun: #8b4513;
   }
 
   /* 夜晚模式 */
@@ -51,9 +51,8 @@
     --accent-glow: rgba(79, 209, 197, 0.4);
     --accent-soft: rgba(79, 209, 197, 0.15);
 
-    /* 四T专属色 (夜晚亮化) */
     --c-tiance: #ff5e5e;
-    --c-shaolin: #fbbf24; /* 明黄 */
+    --c-shaolin: #fbbf24;
     --c-mingjiao: #ff9f43;
     --c-cangyun: #cd853f;
   }
@@ -65,7 +64,6 @@
     font-family:"PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
     color:var(--text-main);
     background-color: var(--bg-base);
-    /* 默认五奶流动背景 */
     background-image: 
       radial-gradient(circle at 10% 10%, rgba(244, 114, 182, 0.35) 0%, transparent 50%),
       radial-gradient(circle at 90% 10%, rgba(155, 138, 251, 0.35) 0%, transparent 50%),
@@ -80,11 +78,10 @@
     transition: background-color 0.4s ease, color 0.4s ease;
   }
 
-  /* 苍生T专属背景 */
   body.tank-mode {
     background-image: 
       radial-gradient(circle at 10% 10%, rgba(231, 76, 60, 0.35) 0%, transparent 50%),
-      radial-gradient(circle at 90% 10%, rgba(217, 119, 6, 0.3) 0%, transparent 50%), /* 调整背景光晕为琥珀金 */
+      radial-gradient(circle at 90% 10%, rgba(217, 119, 6, 0.3) 0%, transparent 50%),
       radial-gradient(circle at 10% 90%, rgba(230, 126, 34, 0.3) 0%, transparent 50%),
       radial-gradient(circle at 90% 90%, rgba(139, 69, 19, 0.35) 0%, transparent 50%),
       radial-gradient(circle at 50% 50%, rgba(200, 80, 50, 0.25) 0%, transparent 60%);
@@ -120,7 +117,6 @@
     padding: 32px 20px 60px;
   }
 
-  /* ---------- 头部控制区 ---------- */
   .header-top {
     display: flex; justify-content: space-between; align-items: flex-start;
     margin-bottom: 8px; gap: 16px; flex-wrap: wrap;
@@ -136,7 +132,6 @@
     display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
   }
 
-  /* ---------- 极简磨砂胶囊按钮 ---------- */
   .capsule {
     appearance: none; -webkit-appearance: none;
     background: var(--card-bg);
@@ -158,14 +153,12 @@
     border-color: transparent;
     box-shadow: 0 4px 12px var(--accent-glow);
   }
+  
+  #btn-reset { color: var(--text-muted); }
+  #btn-reset:hover { border-color: #e74c3c; color: #e74c3c; }
 
-  /* Emoji 图标样式 */
-  .theme-emoji {
-    font-size: 16px;
-    line-height: 1;
-  }
+  .theme-emoji { font-size: 16px; line-height: 1; }
 
-  /* ---------- 门派排序与点缀 ---------- */
   .sects {
     display: flex; gap: 16px; flex-wrap: wrap;
     font-size: 12px; letter-spacing: .2em; color: var(--text-muted);
@@ -192,7 +185,6 @@
   .rainbow-bar { display: flex; gap: 4px; margin: 0 0 20px; height: 2px; }
   .rainbow-bar i { flex: 1; border-radius: 99px; opacity: .8; box-shadow: 0 0 8px currentColor;}
 
-  /* ---------- 面板 ---------- */
   .panel { display: none; animation: fade .3s ease; }
   .panel.active { display: block; }
   @keyframes fade { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:none;} }
@@ -214,7 +206,6 @@
   .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
   .hint { font-size: 12px; color: var(--text-muted); }
 
-  /* ---------- 表格（引入随机色变量） ---------- */
   .table-wrap { overflow-x: auto; }
   table.grid { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
   table.grid th {
@@ -249,7 +240,6 @@
   .total { color: var(--accent); font-size: 16px; font-variant-numeric: tabular-nums; }
   .eff { font-variant-numeric: tabular-nums; color: var(--text-main); }
 
-  /* ---------- 输入框 ---------- */
   input[type=number] {
     font: inherit; font-size: 14px;
     width: 100%; max-width: 110px;
@@ -268,7 +258,6 @@
   input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
 
-  /* ---------- 开关 ---------- */
   .chk { position: relative; display: inline-block; width: 42px; height: 22px; cursor: pointer; vertical-align: middle; }
   .chk input { opacity: 0; width: 0; height: 0; position: absolute; }
   .chk span { position: absolute; inset: 0; border-radius: 999px; background: var(--card-border); transition: .3s; }
@@ -279,7 +268,6 @@
   .chk input:checked + span { background: var(--accent-soft); }
   .chk input:checked + span::after { left: 23px; background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
 
-  /* ---------- 右侧计算卡 ---------- */
   .side h2 { margin-bottom: 18px; }
   .field { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
   .field label { font-size: 13px; color: var(--text-muted); }
@@ -297,10 +285,16 @@
   .stat.accent .stat-value { color: var(--accent); }
   .note { font-size: 12px; line-height: 1.8; color: var(--text-muted); margin: 18px 0 0; }
 
-  /* ---------- 对应表高光 ---------- */
+  /* ---------- 对应表居中修复 ---------- */
   .corr-card { --corr-accent: var(--accent); --corr-accent-soft: var(--accent-soft); }
   
-  .corr td.level { 
+  /* 对应层数列单独居中 */
+  .corr th.center, .corr td.level-cell {
+    text-align: center !important;
+  }
+  
+  /* 徽章样式作用于 span，不再作用于 td，避免偏离 */
+  .corr td .level { 
     color: var(--corr-accent); 
     background: var(--corr-accent-soft);
     padding: 2px 8px; 
@@ -333,17 +327,16 @@
       <p>勾选生效的增益，实时计算裸层数与增益后层数 · 数据源自「苍生铸世」赛季</p>
     </div>
     
-    <!-- 统一控制区 -->
     <div class="controls">
       <button id="btn-tab-healer" class="capsule active">苍生奶妈</button>
       <button id="btn-tab-tank" class="capsule">苍生T</button>
       <button id="theme-btn" class="capsule" title="切换白天/黑夜">
         <span class="theme-emoji" id="theme-icon">☀️</span>
       </button>
+      <button id="btn-reset" class="capsule" title="清除本地记录，恢复默认">重置</button>
     </div>
   </div>
 
-  <!-- 奶妈门派显示区 -->
   <div id="sects-healer">
     <div class="sects">
       <span><i></i>七秀 · 云裳</span>
@@ -361,7 +354,6 @@
     </div>
   </div>
 
-  <!-- 四T门派显示区 (默认隐藏) -->
   <div id="sects-tank" style="display: none;">
     <div class="sects">
       <span><i></i>天策 · 铁牢律</span>
@@ -408,7 +400,7 @@
           <h2>层数计算</h2>
           <div class="field">
             <label>当前根骨</label>
-            <input type="number" id="healer-base">
+            <input type="number" id="healer-base" placeholder="请输入">
           </div>
           <div class="field">
             <label>每层所需</label>
@@ -434,7 +426,7 @@
       <section class="card corr-card" id="corr-card-healer">
         <div class="card-head">
           <h2>苍生铸世赛季奶妈根骨层数对应</h2>
-          <span class="hint">数值由上方「苍生奶妈」表实时计算</span>
+          <span class="hint">需求根骨量动态计算（层数 × 每层所需）</span>
         </div>
         <div class="table-wrap">
           <table class="grid corr">
@@ -478,7 +470,7 @@
           <h2>层数计算</h2>
           <div class="field">
             <label>当前体质</label>
-            <input type="number" id="tank-base">
+            <input type="number" id="tank-base" placeholder="请输入">
           </div>
           <div class="field">
             <label>每层所需</label>
@@ -504,7 +496,7 @@
       <section class="card corr-card" id="corr-card-tank">
         <div class="card-head">
           <h2>苍生T体质层数对应</h2>
-          <span class="hint">数值由上方「苍生T」表实时计算</span>
+          <span class="hint">需求体质量动态计算（层数 × 每层所需）</span>
         </div>
         <div class="table-wrap">
           <table class="grid corr">
@@ -522,66 +514,101 @@
 
 <script>
 /* =========================================================
-   数据模型
+   默认数据模型
    ========================================================= */
-const SHEETS = {
+const DEFAULT_SHEETS = {
   healer: {
-    base: 3304,
-    perLayer: 43,
+    base: '', 
+    perLayer: 45,
     items: [
       { key:'pt',      name:'PT水特效', desc:'全属性',          value:'',  on:false },
       { key:'yx',      name:'YX水特效', desc:'全属性',          value:50,  on:false },
-      { key:'xiuqi',   name:'秀气',     desc:'全属性',          value:45,  on:true  },
-      { key:'zhuozi',  name:'桌子',     desc:'巴渝珍馐宴',      value:143, on:true  },
+      { key:'xiuqi',   name:'秀气',     desc:'全属性',          value:45,  on:false }, 
+      { key:'zhuozi',  name:'桌子',     desc:'巴渝珍馐宴',      value:143, on:false }, 
       { key:'lanshi',  name:'蓝食',     desc:'荏香豆腐羹',      value:63,  on:false },
-      { key:'xiaozi',  name:'小紫食',   desc:'云芝竹沥羹',      value:126, on:true  },
+      { key:'xiaozi',  name:'小紫食',   desc:'云芝竹沥羹',      value:126, on:false }, 
       { key:'dazi',    name:'大紫食',   desc:'云芝竹沥羹·精',   value:158, on:false },
       { key:'lanyao',  name:'蓝药',     desc:'五气培元丹',      value:81,  on:false },
-      { key:'xiaoyao', name:'小紫药',   desc:'五气归元丹',      value:162, on:true  },
+      { key:'xiaoyao', name:'小紫药',   desc:'五气归元丹',      value:162, on:false }, 
       { key:'dazhi',   name:'大紫药',   desc:'五气归元丹·精',   value:203, on:false },
       { key:'lvjiu',   name:'绿酒',     desc:'高粱酒',          value:23,  on:false },
       { key:'lvjiu2',  name:'绿酒',     desc:'高粱酒·今朝醉',   value:46,  on:false },
       { key:'lanjiu',  name:'蓝酒',     desc:'高粱酒·六日醉',   value:69,  on:false },
-      { key:'zijiu',   name:'紫酒',     desc:'高粱酒·旬又三',   value:92,  on:true  }
+      { key:'zijiu',   name:'紫酒',     desc:'高粱酒·旬又三',   value:92,  on:false }  
     ]
   },
   tank: {
-    base: 4540,
-    perLayer: 95,
+    base: '', 
+    perLayer: 96,
     items: [
-      { key:'xiuqi',  name:'秀气',     desc:'全属性',        value:45,  on:true  },
-      { key:'zhuozi', name:'桌子',     desc:'巴渝珍馐宴',    value:143, on:true  },
+      { key:'xiuqi',  name:'秀气',     desc:'全属性',        value:45,  on:false }, 
+      { key:'zhuozi', name:'桌子',     desc:'巴渝珍馐宴',    value:143, on:false }, 
       { key:'lanshi', name:'蓝食',     desc:'荏香豆腐羹',    value:63,  on:false },
-      { key:'zishi',  name:'紫食',     desc:'云芝竹沥羹',    value:126, on:true  },
+      { key:'zishi',  name:'紫食',     desc:'云芝竹沥羹',    value:126, on:false }, 
       { key:'jzishi', name:'精·紫食',  desc:'云芝竹沥羹·精', value:158, on:false },
       { key:'lanyao', name:'蓝药',     desc:'五气培元丹',    value:81,  on:false },
-      { key:'zhiyao', name:'紫药',     desc:'五气归元丹',    value:162, on:true  },
+      { key:'zhiyao', name:'紫药',     desc:'五气归元丹',    value:162, on:false }, 
       { key:'jzhiyao',name:'精·紫药',  desc:'五气归元丹·精', value:203, on:false }
     ]
   }
 };
 
-const HEALER_CORR_ROWS = [
-  { need: 3440, level: 80  },
-  { need: 3655, level: 85  },
-  { need: 3870, level: 90  },
-  { need: 4085, level: 95  },
-  { need: 4300, level: 100 }
-];
-
-const TANK_CORR_ROWS = [
-  { need: 7600, level: 80  },
-  { need: 8075, level: 85  },
-  { need: 8550, level: 90  },
-  { need: 9025, level: 95  },
-  { need: 9500, level: 100 }
-];
+const TARGET_LEVELS = [80, 85, 90, 95, 100];
 
 /* =========================================================
-   门派颜色池与工具函数
+   本地存储
+   ========================================================= */
+const STORAGE_KEY_HEALER = 'tHealerData_v3'; 
+const STORAGE_KEY_TANK = 'tTankData_v3';
+
+let SHEETS = JSON.parse(JSON.stringify(DEFAULT_SHEETS)); 
+
+function loadDataFromStorage() {
+  try {
+    const savedHealer = localStorage.getItem(STORAGE_KEY_HEALER);
+    const savedTank = localStorage.getItem(STORAGE_KEY_TANK);
+    
+    if (savedHealer) {
+      const parsed = JSON.parse(savedHealer);
+      SHEETS.healer.base = parsed.base === undefined ? '' : parsed.base;
+      SHEETS.healer.perLayer = parsed.perLayer;
+      parsed.items.forEach((item, i) => {
+        if (SHEETS.healer.items[i]) {
+          SHEETS.healer.items[i].value = item.value;
+          SHEETS.healer.items[i].on = item.on;
+        }
+      });
+    }
+    
+    if (savedTank) {
+      const parsed = JSON.parse(savedTank);
+      SHEETS.tank.base = parsed.base === undefined ? '' : parsed.base;
+      SHEETS.tank.perLayer = parsed.perLayer;
+      parsed.items.forEach((item, i) => {
+        if (SHEETS.tank.items[i]) {
+          SHEETS.tank.items[i].value = item.value;
+          SHEETS.tank.items[i].on = item.on;
+        }
+      });
+    }
+  } catch (e) {
+    console.warn('读取本地数据失败，使用默认数据');
+  }
+}
+
+function saveDataToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY_HEALER, JSON.stringify(SHEETS.healer));
+    localStorage.setItem(STORAGE_KEY_TANK, JSON.stringify(SHEETS.tank));
+  } catch (e) {
+    console.warn('保存本地数据失败');
+  }
+}
+
+/* =========================================================
+   颜色工具
    ========================================================= */
 const healerColors = ['#f472b6', '#14b8a6', '#9b8afb', '#c084fc', '#10b981']; 
-// T的颜色池，同步更新琥珀金
 const tankColors = ['#e74c3c', '#d97706', '#e67e22', '#8b4513']; 
 
 function hexToRgba(hex, alpha) {
@@ -597,20 +624,19 @@ function getRandomColor(type) {
 }
 
 /* =========================================================
-   白天/夜晚模式切换 (Emoji)
+   主题切换
    ========================================================= */
 const themeBtn = document.getElementById('theme-btn');
 const themeIcon = document.getElementById('theme-icon');
 
 let currentTheme = 'light';
 try {
-  const saved = localStorage.getItem('t-healer-theme');
-  if (saved) currentTheme = saved;
+  const savedTheme = localStorage.getItem('t-healer-theme');
+  if (savedTheme) currentTheme = savedTheme;
 } catch (e) {}
 
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', currentTheme);
-  
   if (currentTheme === 'light') {
     themeIcon.textContent = '☀️';
   } else {
@@ -627,7 +653,7 @@ themeBtn.addEventListener('click', () => {
 });
 
 /* =========================================================
-   模块并列按钮切换 (联动门派与背景)
+   模块切换
    ========================================================= */
 const btnHealer = document.getElementById('btn-tab-healer');
 const btnTank = document.getElementById('btn-tab-tank');
@@ -640,22 +666,18 @@ function switchModule(targetTab) {
     btnTank.classList.remove('active');
     document.getElementById('panel-healer').classList.add('active');
     document.getElementById('panel-tank').classList.remove('active');
-    
     sectsHealer.style.display = 'block';
     sectsTank.style.display = 'none';
     document.body.classList.remove('tank-mode');
-    
     randomizeCorrColor('healer');
   } else {
     btnTank.classList.add('active');
     btnHealer.classList.remove('active');
     document.getElementById('panel-tank').classList.add('active');
     document.getElementById('panel-healer').classList.remove('active');
-    
     sectsHealer.style.display = 'none';
     sectsTank.style.display = 'block';
     document.body.classList.add('tank-mode');
-    
     randomizeCorrColor('tank');
   }
 }
@@ -664,7 +686,7 @@ btnHealer.addEventListener('click', () => switchModule('healer'));
 btnTank.addEventListener('click', () => switchModule('tank'));
 
 /* =========================================================
-   对应表随机高光颜色逻辑
+   高光颜色
    ========================================================= */
 function randomizeCorrColor(type) {
   const color = getRandomColor(type);
@@ -673,9 +695,6 @@ function randomizeCorrColor(type) {
   card.style.setProperty('--corr-accent-soft', hexToRgba(color, 0.15)); 
 }
 
-/* =========================================================
-   主表格随机高亮应用逻辑
-   ========================================================= */
 function applyRowHighlight(tr, type) {
   const color = getRandomColor(type);
   tr.style.setProperty('--r-accent', color);
@@ -683,7 +702,7 @@ function applyRowHighlight(tr, type) {
 }
 
 /* =========================================================
-   渲染主表格函数
+   渲染主表
    ========================================================= */
 function renderHealerTable() {
   const s = SHEETS.healer;
@@ -716,6 +735,7 @@ function renderHealerTable() {
     if (t.classList.contains('val')) {
       const i = +t.dataset.i;
       s.items[i].value = t.value === '' ? '' : Number(t.value);
+      saveDataToStorage(); 
       updateSheet('healer');
       updateHealerCorrespondence();
     }
@@ -735,18 +755,24 @@ function renderHealerTable() {
         tr.style.removeProperty('--r-accent-soft');
       }
       
+      saveDataToStorage();
       updateSheet('healer');
       updateHealerCorrespondence();
     }
   });
 
   document.getElementById('healer-base').addEventListener('input', e => {
-    s.base = Number(e.target.value) || 0;
+    const val = e.target.value;
+    s.base = val === '' ? '' : Number(val);
+    saveDataToStorage();
     updateSheet('healer');
   });
+  
   document.getElementById('healer-per').addEventListener('input', e => {
     s.perLayer = Number(e.target.value) || 0;
+    saveDataToStorage();
     updateSheet('healer');
+    buildHealerCorrespondence(); 
   });
 
   updateSheet('healer');
@@ -783,6 +809,7 @@ function renderTankTable() {
     if (t.classList.contains('val')) {
       const i = +t.dataset.i;
       s.items[i].value = t.value === '' ? '' : Number(t.value);
+      saveDataToStorage();
       updateSheet('tank');
       updateTankCorrespondence();
     }
@@ -802,18 +829,24 @@ function renderTankTable() {
         tr.style.removeProperty('--r-accent-soft');
       }
       
+      saveDataToStorage();
       updateSheet('tank');
       updateTankCorrespondence();
     }
   });
 
   document.getElementById('tank-base').addEventListener('input', e => {
-    s.base = Number(e.target.value) || 0;
+    const val = e.target.value;
+    s.base = val === '' ? '' : Number(val);
+    saveDataToStorage();
     updateSheet('tank');
   });
+  
   document.getElementById('tank-per').addEventListener('input', e => {
     s.perLayer = Number(e.target.value) || 0;
+    saveDataToStorage();
     updateSheet('tank');
+    buildTankCorrespondence();
   });
 
   updateSheet('tank');
@@ -841,15 +874,19 @@ function updateSheet(key) {
   document.getElementById(`${key}-total`).textContent = total;
 
   const per = s.perLayer;
-  const bare   = per > 0 ? Math.floor(s.base / per) : null;
-  const buffed = per > 0 ? Math.floor((s.base + total) / per) : null;
+  const baseVal = Number(s.base);
+  
+  const hasBase = (s.base !== '' && !isNaN(baseVal) && baseVal > 0);
+  
+  const bare   = (hasBase && per > 0) ? Math.floor(baseVal / per) : null;
+  const buffed = (hasBase && per > 0) ? Math.floor((baseVal + total) / per) : null;
 
-  document.getElementById(`${key}-bare`).textContent   = per > 0 ? bare   : '—';
-  document.getElementById(`${key}-buffed`).textContent = per > 0 ? buffed : '—';
+  document.getElementById(`${key}-bare`).textContent   = bare !== null ? bare : '—';
+  document.getElementById(`${key}-buffed`).textContent = buffed !== null ? buffed : '—';
 }
 
 /* =========================================================
-   奶妈对应表逻辑
+   奶妈对应表
    ========================================================= */
 function getHealerCols() {
   const h = SHEETS.healer;
@@ -871,11 +908,13 @@ function getHealerCols() {
 
 function buildHealerCorrespondence() {
   const cols = getHealerCols();
+  const per = SHEETS.healer.perLayer;
+  
   const thead = document.getElementById('healer-corr-thead');
   thead.innerHTML = `
     <tr>
       <th>需求根骨量</th>
-      <th>对应层数</th>
+      <th class="center">对应层数</th>
       ${cols.map(c => `
         <th class="num">
           <div class="col-name">${c.name}</div>
@@ -885,44 +924,37 @@ function buildHealerCorrespondence() {
   `;
 
   const tbody = document.getElementById('healer-corr-tbody');
-  tbody.innerHTML = HEALER_CORR_ROWS.map((r, ri) => `
-    <tr data-r="${ri}">
-      <td class="num need-cell">
-        <input type="number" class="need" data-r="${ri}" value="${r.need}">
-      </td>
-      <td class="level">${r.level}</td>
-      ${cols.map(c => `<td class="num calc">${r.need - c.sum}</td>`).join('')}
-    </tr>
-  `).join('');
+  tbody.innerHTML = TARGET_LEVELS.map((level, ri) => {
+    const need = level * per; 
+    return `
+      <tr data-r="${ri}">
+        <td class="num need-cell">
+          <input type="number" class="need" data-r="${ri}" value="${need}">
+        </td>
+        <td class="level-cell"><span class="level">${level}</span></td>
+        ${cols.map(c => `<td class="num calc">${need - c.sum}</td>`).join('')}
+      </tr>
+    `;
+  }).join('');
 
   tbody.querySelectorAll('.need').forEach(inp => {
     inp.addEventListener('input', () => {
       const ri = +inp.dataset.r;
-      HEALER_CORR_ROWS[ri].need = Number(inp.value) || 0;
-      updateHealerCorrespondence();
+      const tr = inp.closest('tr');
+      const need = Number(inp.value) || 0;
+      tr.querySelectorAll('td.calc').forEach((td, ci) => {
+        td.textContent = need - cols[ci].sum;
+      });
     });
   });
 }
 
 function updateHealerCorrespondence() {
-  const cols = getHealerCols();
-  const ths = document.querySelectorAll('#healer-corr-thead th');
-  for (let i = 2; i < ths.length; i++) {
-    const div = ths[i].querySelector('.col-sum');
-    if (div) div.textContent = `根骨 ${cols[i-2].sum}`;
-  }
-
-  const tbody = document.getElementById('healer-corr-tbody');
-  tbody.querySelectorAll('tr').forEach((tr, ri) => {
-    const need = HEALER_CORR_ROWS[ri].need;
-    tr.querySelectorAll('td.calc').forEach((td, ci) => {
-      td.textContent = need - cols[ci].sum;
-    });
-  });
+  buildHealerCorrespondence();
 }
 
 /* =========================================================
-   T对应表逻辑
+   T对应表
    ========================================================= */
 function getTankCols() {
   const t = SHEETS.tank;
@@ -943,11 +975,13 @@ function getTankCols() {
 
 function buildTankCorrespondence() {
   const cols = getTankCols();
+  const per = SHEETS.tank.perLayer;
+
   const thead = document.getElementById('tank-corr-thead');
   thead.innerHTML = `
     <tr>
       <th>需求体质量</th>
-      <th>对应层数</th>
+      <th class="center">对应层数</th>
       ${cols.map(c => `
         <th class="num">
           <div class="col-name">${c.name}</div>
@@ -957,45 +991,53 @@ function buildTankCorrespondence() {
   `;
 
   const tbody = document.getElementById('tank-corr-tbody');
-  tbody.innerHTML = TANK_CORR_ROWS.map((r, ri) => `
-    <tr data-r="${ri}">
-      <td class="num need-cell">
-        <input type="number" class="need" data-r="${ri}" value="${r.need}">
-      </td>
-      <td class="level">${r.level}</td>
-      ${cols.map(c => `<td class="num calc">${r.need - c.sum}</td>`).join('')}
-    </tr>
-  `).join('');
+  tbody.innerHTML = TARGET_LEVELS.map((level, ri) => {
+    const need = level * per; 
+    return `
+      <tr data-r="${ri}">
+        <td class="num need-cell">
+          <input type="number" class="need" data-r="${ri}" value="${need}">
+        </td>
+        <td class="level-cell"><span class="level">${level}</span></td>
+        ${cols.map(c => `<td class="num calc">${need - c.sum}</td>`).join('')}
+      </tr>
+    `;
+  }).join('');
 
   tbody.querySelectorAll('.need').forEach(inp => {
     inp.addEventListener('input', () => {
       const ri = +inp.dataset.r;
-      TANK_CORR_ROWS[ri].need = Number(inp.value) || 0;
-      updateTankCorrespondence();
+      const tr = inp.closest('tr');
+      const need = Number(inp.value) || 0;
+      tr.querySelectorAll('td.calc').forEach((td, ci) => {
+        td.textContent = need - cols[ci].sum;
+      });
     });
   });
 }
 
 function updateTankCorrespondence() {
-  const cols = getTankCols();
-  const ths = document.querySelectorAll('#tank-corr-thead th');
-  for (let i = 2; i < ths.length; i++) {
-    const div = ths[i].querySelector('.col-sum');
-    if (div) div.textContent = `体质 ${cols[i-2].sum}`;
-  }
-
-  const tbody = document.getElementById('tank-corr-tbody');
-  tbody.querySelectorAll('tr').forEach((tr, ri) => {
-    const need = TANK_CORR_ROWS[ri].need;
-    tr.querySelectorAll('td.calc').forEach((td, ci) => {
-      td.textContent = need - cols[ci].sum;
-    });
-  });
+  buildTankCorrespondence();
 }
+
+/* =========================================================
+   重置
+   ========================================================= */
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (confirm('确定要清空您上次保存的所有数据，恢复初始的空白状态吗？')) {
+    try {
+      localStorage.removeItem(STORAGE_KEY_HEALER);
+      localStorage.removeItem(STORAGE_KEY_TANK);
+      location.reload(); 
+    } catch(e) {}
+  }
+});
 
 /* =========================================================
    初始化
    ========================================================= */
+loadDataFromStorage();
+
 renderHealerTable();
 renderTankTable();
 
